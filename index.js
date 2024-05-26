@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import { UserController } from './controllers/index.js';
 import { loginValidation, registerValidation } from './validations.js';
 import { handleValidationErrors, checkAuth } from './utils/index.js';
+import { EspController } from './controllers/index.js';
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -20,6 +21,7 @@ app.use(cors());
 /* Регистрация пользователя */
 app.post('/auth/login', loginValidation, handleValidationErrors, UserController.login);
 app.post('/auth/register', registerValidation, handleValidationErrors, UserController.register);
+app.post('/dataesp', EspController.EspPost);
 app.get('/auth/me', checkAuth, UserController.getMe);
 
 app.listen(process.env.PORT || 4444, (err) => {
