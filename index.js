@@ -22,7 +22,12 @@ app.use(cors());
 app.post('/auth/login', loginValidation, handleValidationErrors, UserController.login);
 app.post('/auth/register', registerValidation, handleValidationErrors, UserController.register);
 app.post('/dataesp', EspController.EspPost);
+app.put('/auth/:id/:deviceId', UserController.putDeviceId)
 app.get('/auth/me', checkAuth, UserController.getMe);
+app.get('/temperature/:deviceId', EspController.EspGetTemperature);
+app.get('/hum/:deviceId', EspController.EspGetHumidity);
+app.get('/mq2/:deviceId', EspController.EspGetCO);
+app.get('/mq5/:deviceId', EspController.EspGetDang);
 
 app.listen(process.env.PORT || 4444, (err) => {
   if (err) {

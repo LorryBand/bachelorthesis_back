@@ -1,7 +1,8 @@
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
-import UserModel from '../models/User.js';
+import UserModel from "../models/User.js";
+import User from "../models/User.js";
 
 export const register = async (req, res) => {
   try {
@@ -23,10 +24,10 @@ export const register = async (req, res) => {
       {
         _id: user._id,
       },
-      'secret123',
+      "secret123",
       {
-        expiresIn: '30d',
-      },
+        expiresIn: "30d",
+      }
     );
 
     const { passwordHash, ...userData } = user._doc;
@@ -38,7 +39,7 @@ export const register = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({
-      message: 'Err register',
+      message: "Err register",
     });
   }
 };
@@ -49,15 +50,18 @@ export const login = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({
-        message: 'Err found',
+        message: "Err found",
       });
     }
 
-    const isValidPass = await bcrypt.compare(req.body.password, user._doc.passwordHash);
+    const isValidPass = await bcrypt.compare(
+      req.body.password,
+      user._doc.passwordHash
+    );
 
     if (!isValidPass) {
       return res.status(400).json({
-        message: 'Wrong password',
+        message: "Wrong password",
       });
     }
 
@@ -65,10 +69,10 @@ export const login = async (req, res) => {
       {
         _id: user._id,
       },
-      'secret123',
+      "secret123",
       {
-        expiresIn: '30d',
-      },
+        expiresIn: "30d",
+      }
     );
 
     const { passwordHash, ...userData } = user._doc;
@@ -80,8 +84,25 @@ export const login = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({
-      message: 'Wrong password',
+      message: "Wrong password",
     });
+  }
+};
+
+export const putDeviceId = async (req, res) => {
+  try {
+    const deviceId = req.params.deviceId;
+    const id = req.params.id;
+
+    const putDevice = await UserModel.findByIdAndUpdate(
+      id,
+      { deviceId: deviceId },
+      { new: true }
+    );
+
+    res.status(200).json("sucess");
+  } catch (error) {
+    res.status(500).json("fail");
   }
 };
 
@@ -91,7 +112,7 @@ export const getMe = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({
-        message: 'Err found',
+        message: "Err found",
       });
     }
 
@@ -101,7 +122,7 @@ export const getMe = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({
-      message: 'Not access',
+      message: "Not access",
     });
   }
 };
